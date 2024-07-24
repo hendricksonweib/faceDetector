@@ -1,6 +1,6 @@
 const cam = document.querySelector('#video')
 
-Promise.all([ // Retorna apenas uma promisse quando todas já estiverem resolvidas
+Promise.all([ 
 
     faceapi.nets.tinyFaceDetector.loadFromUri('/models'), // É igual uma detecção facial normal, porém menor e mais rapido
     faceapi.nets.faceLandmark68Net.loadFromUri('/models'), // Pegar os pontos de referencia do sue rosto. Ex: olhos, boca, nariz, etc...
@@ -27,31 +27,31 @@ async function startVideo() {
 
 cam.addEventListener('play', () => {
 
-    const canvas = faceapi.createCanvasFromMedia(video) // Criando canvas para mostrar nossos resultador
-    document.body.append(canvas) // Adicionando canvas ao body
+    const canvas = faceapi.createCanvasFromMedia(video) 
+    document.body.append(canvas) 
 
-    const displaySize = { width: cam.width, height: cam.height } // criando tamanho do display a partir das dimenssões da nossa cam
+    const displaySize = { width: cam.width, height: cam.height } 
 
-    faceapi.matchDimensions(canvas, displaySize) // Igualando as dimensões do canvas com da nossa cam
+    faceapi.matchDimensions(canvas, displaySize)
 
-    setInterval(async () => { // Intervalo para detectar os rostos a cada 100ms
+    setInterval(async () => { 
         const detections = await faceapi.detectAllFaces(
-            cam, // Primeiro parametro é nossa camera
-            new faceapi.TinyFaceDetectorOptions() // Qual tipo de biblioteca vamos usar para detectar os rostos
+            cam, 
+            new faceapi.TinyFaceDetectorOptions() 
 
         )
-            .withFaceLandmarks() // Vai desenhar os pontos de marcação no rosto
-            .withFaceExpressions() // Vai determinar nossas expressões
+            .withFaceLandmarks() 
+            .withFaceExpressions() 
 
 
-        const resizedDetections = faceapi.resizeResults(detections, displaySize) // Redimensionado as detecções
+        const resizedDetections = faceapi.resizeResults(detections, displaySize) 
 
 
-        canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height) // Apagando nosso canvas antes de desenhar outro
+        canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height) 
 
-        faceapi.draw.drawDetections(canvas, resizedDetections) // Desenhando decções
-        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections) // Desenhando os pontos de referencia
-        faceapi.draw.drawFaceExpressions(canvas, resizedDetections) // Desenhando expressões
+        faceapi.draw.drawDetections(canvas, resizedDetections) 
+        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+        faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
 
     }, 100);
 })
